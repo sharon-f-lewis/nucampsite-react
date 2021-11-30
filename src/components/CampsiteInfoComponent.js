@@ -20,7 +20,7 @@ function RenderCampsite({campsite}) {
   );
 }
 
-function RenderComments({comments}) {
+function RenderComments({comments, addComment, campsiteId}) {
   if (comments) {
     return (
       <div className="col-md-5 m-1">
@@ -37,7 +37,7 @@ function RenderComments({comments}) {
             <br />
           </div>
         ))}
-        <CommentForm />
+        <CommentForm campsiteId={campsiteId} addComment={addComment} />
       </div>
     );
   }
@@ -71,8 +71,8 @@ class CommentForm extends Component {
   }
 
   handleSubmit(values) {
-    console.log("Current state is: " + JSON.stringify(values));
-    alert("Current state is: " + JSON.stringify(values));
+    this.toggleModal();
+    this.props.addComment(this.props.campsiteId, values.rating, values.author, values.text);
   }
 
   render() {
@@ -123,12 +123,12 @@ class CommentForm extends Component {
                 />
               </div>
               <div className="form-group">
-                <Label htmlFor="comment">Comment</Label>
+                <Label htmlFor="text">Comment</Label>
                 <Control.textarea 
                   className="form-control"
-                  model=".comment" 
-                  name='comment' 
-                  id="comment" 
+                  model=".text" 
+                  name='text' 
+                  id="text" 
                   rows="6" 
                 />
               </div>
@@ -158,7 +158,11 @@ function CampsiteInfo(props) {
 
         <div className="row">
           <RenderCampsite campsite={props.campsite} />
-          <RenderComments comments={props.comments} />
+          <RenderComments 
+            comments={props.comments}
+            addComment={props.addComment}
+            campsiteId={props.campsite.id}
+          />
         </div>
       </div>
     );
